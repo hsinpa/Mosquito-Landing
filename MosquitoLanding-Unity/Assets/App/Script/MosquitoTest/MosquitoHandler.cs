@@ -34,7 +34,7 @@ public class MosquitoHandler : MonoBehaviour {
 					newVelocity += _rigidBody.velocity;
 			
 			if (newVelocity.magnitude <= 4) {
-				_rigidBody.velocity = Vector3.Lerp(_rigidBody.velocity, newVelocity, 0.05f);
+				_rigidBody.velocity = Vector3.Lerp(_rigidBody.velocity, newVelocity, 0.0085f);
 			}
 
 			Debug.Log("Magnitude " + _rigidBody.velocity.magnitude);
