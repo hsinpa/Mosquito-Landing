@@ -6,7 +6,8 @@ public class EventFlag : MonoBehaviour {
 	public static int examineLayer = 9;
 
 	public static int normalRaycastLayer = 1 << 0;
-	public static int examineRaycastLayer = 1 << 9;
+	public static int BodySkinRaycastLayer = 1 << 9;
+
 
 	public class Game {
 		public const string SetUp = "game.setup@event";
