@@ -19,6 +19,7 @@ public class MosquitoHandler : MonoBehaviour {
 	private float accelerateSpeed;
 
 	private MosquitoInputManager inputManager;
+	private CameraHandler _camera;
 
 	// Use this for initialization
 	void Start () {
@@ -28,7 +29,7 @@ public class MosquitoHandler : MonoBehaviour {
 		inputManager = new MosquitoInputManager();
 
 		headObject = transform.Find("head");
-
+		_camera = Camera.main.transform.GetComponent<CameraHandler>();
 	}
 
 	void FixedUpdate() {
@@ -110,8 +111,10 @@ public class MosquitoHandler : MonoBehaviour {
 			float angle = (180 / Mathf.PI) * Mathf.Atan2(faceDir.y, faceDir.x);
 
 			headObject.rotation = Quaternion.Lerp(headObject.rotation, Quaternion.Euler(0, 0, (angle +90)), 0.3f);
+			_camera.SetAnimation(CameraHandler.State.FollowTarget, transform, 3);
 		} else {
 			headObject.rotation = Quaternion.Lerp(headObject.rotation, Quaternion.Euler(Vector3.zero), 0.5f);
+			_camera.SetAnimation(CameraHandler.State.Default);
 		}
 	}
 
