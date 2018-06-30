@@ -57,7 +57,7 @@ public class CameraHandler : MonoBehaviour {
 												targetCameraSize);
 			break;
 		}
-		Debug.Log(IsAnimationFinish);
+		
 		if (IsAnimationFinish) _currentState = State.Idle;
 	}
 
