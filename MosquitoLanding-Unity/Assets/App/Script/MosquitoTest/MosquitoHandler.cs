@@ -4,133 +4,142 @@ using UnityEngine;
 using MosquitoInput;
 using System.Linq;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class MosquitoHandler : MonoBehaviour {
 
+	#region Inspector Parameter
+    [Header("Movement Setting")]
 	[SerializeField]
 	private float _speed;
+	public float speed {
+		get {
+			return _speed;
+		}
+		set {
+			_speed = value;
+		}
+	}
 
 	[SerializeField]
 	private float _rotateSpeed;
+	public float rotateSpeed {
+		get {
+			return _rotateSpeed;
+		}
+		set {
+			_rotateSpeed = value;
+		}
+	}
 
-	private Rigidbody2D _rigidBody;
-	private Transform headObject;
+	private float _collsionResistance = 1.5f;
 
-	private float defaultAccelerateSpeed = 0.008f;
-	private float accelerateSpeed;
+    [Header("Blood Related Setting")]
+	public float _bloodSeekAmount = 0;
+	public float _maxPerBloodAmount = 5;
+	public int _totalBloodSeekAmount = 20;
 
-	private MosquitoInputManager inputManager;
+
+
 	private CameraHandler _camera;
+	private Rigidbody2D _rigidBody;
+
+	private MosquitoMovement _mosquitoMovement;
+	private MosquitoBloodSuck _mosquitoBloodSucker;
+
+	public delegate void OnStatusChangeEvent(Status p_status);
+
+	public enum Status {
+		Idle,
+		Landing,
+		SuckBlood,
+		Dead
+	}
+
+	public Status currentStatus {
+		get {
+			return _currentStatus;
+		}
+		set {
+			
+			if (value != _currentStatus) {
+				if (OnStatusChange != null)
+					OnStatusChange(value);
+				_currentStatus = value;
+			}
+		}
+	}
+	
+	private Status _currentStatus;
+	public event OnStatusChangeEvent OnStatusChange;
+
+	#endregion
 
 	// Use this for initialization
 	void Start () {
 		_rigidBody = GetComponent<Rigidbody2D>();
-		accelerateSpeed = defaultAccelerateSpeed;
-
-		inputManager = new MosquitoInputManager();
-
-		headObject = transform.Find("head");
 		_camera = Camera.main.transform.GetComponent<CameraHandler>();
+		_mosquitoMovement = new MosquitoMovement(this, _camera);
+		_mosquitoBloodSucker = new MosquitoBloodSuck(this, 
+		transform.Find("BUG_BODY DOWN").GetComponent<Anima2D.SpriteMeshInstance>());
+		
+		SetUp();
+	}
+
+	public void SetUp() {
+		_bloodSeekAmount = 0;
+		currentStatus = Status.Idle;
+		_rigidBody.angularVelocity = 0;
+		_rigidBody.rotation = 0;
 	}
 
 	void FixedUpdate() {
-		float translation = ( inputManager.IsFrontClick() + 
-						((inputManager.IsLeftClick() + inputManager.IsRightClick() == 2) ? 1 : 0) )
-						* _speed;
-
-        float rotation = -(inputManager.IsLeftClick() - inputManager.IsRightClick()) * _rotateSpeed;
-
-		VerticalMove(translation);
-		HorizontalMove(rotation);
+		_mosquitoMovement.OnFixedUpdate();
 	}
 
 	void Update() {
-		RotateHeadToNearstTarget();
-	}
-
-	private void VerticalMove(float p_variable) {
-		if (p_variable != 0) {
-			DirectionalMove(p_variable, transform.up);
-
-			_rigidBody.rotation = Mathf.Lerp(_rigidBody.rotation, 0, 0.1f);
-			_rigidBody.angularVelocity = 0;
-
-			//Debug.Log("Magnitude " + _rigidBody.velocity.magnitude);
-		} else {
-			accelerateSpeed = Mathf.Lerp(accelerateSpeed, defaultAccelerateSpeed, 0.01f);
-		}
-	}
-
-	private void HorizontalMove(float p_variable) {
-		if (p_variable != 0) {
-			DirectionalMove(p_variable, transform.right);
-		}
-	}
-
-	private void DirectionalMove(float p_variable, Vector3 p_local_direction) {
-		Vector2 newVelocity = ( p_local_direction * p_variable * Time.deltaTime );
-				newVelocity += _rigidBody.velocity;
 		
-		if (newVelocity.magnitude <= 4) {
-			accelerateSpeed =  Mathf.Clamp(accelerateSpeed + (Time.deltaTime * 0.02f ), 0, 0.1f);
-			_rigidBody.velocity = Vector3.Lerp(_rigidBody.velocity, newVelocity, accelerateSpeed);
-		}
+		_mosquitoMovement.OnUpdate();
+		_mosquitoBloodSucker.OnUpdate();
 	}
 
+	void DeadAnimationHandler(string p_death_style) {
+		// switch (p_death_style)
+		// {
+			
+		// }
 
-	private List<Vector2> FindNearestBodySkin() {
-		float lineRadius = 2.5f;
-		float perDegree = 18;
-		int totalLine = 20;
+		currentStatus = Status.Dead;
 
-		List<Vector2> bodyPoint = new List<Vector2>();
-
-		for (int i = 1; i <= totalLine; i++) {
-			var x = lineRadius * Mathf.Cos((perDegree * i  )* Mathf.Deg2Rad);
-			var y = lineRadius * Mathf.Sin((perDegree * i )* Mathf.Deg2Rad);
-
-			Vector2 targetLocation = new Vector2( transform.position.x +  x, transform.position.y + y);
-
-			// Gizmos.color = Color.blue;
-            // Gizmos.DrawLine(transform.position, targetLocation);
-
-			RaycastHit2D raycastHit = Physics2D.Linecast(transform.position, targetLocation, EventFlag.BodySkinRaycastLayer); 
-			if (raycastHit.collider != null) {
-				bodyPoint.Add(raycastHit.point);
-			}
-		}
-
-		bodyPoint.OrderBy(x=>x.magnitude);
-
-		return bodyPoint;
+		StartCoroutine(WaitAndRestart(2));
 	}
-
-	private void RotateHeadToNearstTarget() {
-		List<Vector2> allTouchableSkin = FindNearestBodySkin();
-		if (allTouchableSkin.Count > 0) {
-			Vector3 faceDir = ((Vector3)allTouchableSkin[0] - headObject.transform.position).normalized; 
-			float angle = (180 / Mathf.PI) * Mathf.Atan2(faceDir.y, faceDir.x);
-
-			headObject.rotation = Quaternion.Lerp(headObject.rotation, Quaternion.Euler(0, 0, (angle +90)), 0.3f);
-			_camera.SetAnimation(CameraHandler.State.FollowTarget, transform, 3);
-		} else {
-			headObject.rotation = Quaternion.Lerp(headObject.rotation, Quaternion.Euler(Vector3.zero), 0.5f);
-			_camera.SetAnimation(CameraHandler.State.Default);
-		}
-	}
-
-    // void OnDrawGizmosSelected() {
-	// 	FindNearestBodySkin();
-    // }
 
 	void OnCollisionEnter2D(Collision2D collision)
     {
-		if (collision.gameObject.layer == 9) {
-			Debug.Log(collision.gameObject.name);
-			float xLandingPower = Mathf.Abs(_rigidBody.velocity.x);
-			float yLandingPower = Mathf.Abs(_rigidBody.velocity.y);
-
+		if (collision.gameObject != this.gameObject && currentStatus != Status.SuckBlood) {
+			OnCollisionHandler(collision);
+			// currentStatus = Status.SuckBlood;
 		}
     }
- 
 
+	void OnCollisionHandler(Collision2D collision) {
+		float velocity = collision.relativeVelocity.sqrMagnitude;
+
+		if (velocity > _collsionResistance) {
+			DeadAnimationHandler(EventFlag.Death.HitWall);
+		}
+
+		if (collision.gameObject.layer == 9) {
+			currentStatus = Status.SuckBlood;
+		}
+		Debug.Log("Landing power : " + velocity);
+	}
+	
+
+	//Only exist temporarily
+	private IEnumerator WaitAndRestart(float waitTime)
+    {
+		yield return new WaitForSeconds(waitTime);
+		transform.position = Vector2.zero;
+		SetUp();
+    }
 }

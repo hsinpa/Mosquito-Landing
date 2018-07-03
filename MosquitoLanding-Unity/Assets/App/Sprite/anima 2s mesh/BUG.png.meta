@@ -1,0 +1,284 @@
+fileFormatVersion: 2
+guid: 1cc5d967d2721664da221a950091b000
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: BUG_LEG
+    21300002: BUG_1
+    21300004: BUG_leg
+    21300006: BUG_MOUSE
+    21300008: BUG_BODY DOWN
+    21300010: BUG_WING
+    21300012: BUG_5
+    21300014: BUG_EYE
+    21300016: BUG_HEAD
+  externalObjects: {}
+  serializedVersion: 5
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: 1
+    mipBias: -1
+    wrapU: 1
+    wrapV: 1
+    wrapW: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.24968609, y: 0.9502029}
+  spritePixelsToUnits: 600
+  spriteBorder: {x: 0, y: 960, z: 1561, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 2
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: BUG_LEG
+      rect:
+        serializedVersion: 2
+        x: 1.2035398
+        y: 955.8184
+        width: 551.7758
+        height: 1081.938
+      alignment: 9
+      pivot: {x: 0.95544195, y: 0.9783296}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c98e80eee6f47f14bbb1992265e80c0b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BUG_1
+      rect:
+        serializedVersion: 2
+        x: 730
+        y: 1880
+        width: 17
+        height: 147
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 17d3244b9a1bfae42b20ca7046f747bc
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BUG_leg
+      rect:
+        serializedVersion: 2
+        x: 1.2035398
+        y: 965.7822
+        width: 551.7758
+        height: 1071.6011
+      alignment: 9
+      pivot: {x: 0.93807566, y: 0.968769}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b2749b40a82a9b4da214d606f95ee12
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BUG_MOUSE
+      rect:
+        serializedVersion: 2
+        x: 786
+        y: 1151.7406
+        width: 65.83185
+        height: 812.14453
+      alignment: 9
+      pivot: {x: 0.53576845, y: 0.94980156}
+      border: {x: 33, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c858ba85e7cae904ea2b99cf84d6d8a3
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BUG_BODY DOWN
+      rect:
+        serializedVersion: 2
+        x: 1163
+        y: 677.8468
+        width: 388.4159
+        height: 1439.1532
+      alignment: 9
+      pivot: {x: 0.5195765, y: 0.985002}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb59a44716f241543be1dd0751cf0f84
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BUG_WING
+      rect:
+        serializedVersion: 2
+        x: 1666.0001
+        y: 691.8436
+        width: 429.77283
+        height: 1425.1564
+      alignment: 9
+      pivot: {x: 0.5119938, y: 0.010504304}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94057809e435fbd41801a9b48f2df7a1
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BUG_5
+      rect:
+        serializedVersion: 2
+        x: 76.99998
+        y: 81.98049
+        width: 504.21536
+        height: 734.6177
+      alignment: 9
+      pivot: {x: 0.49879482, y: 0.4996061}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9251e28042fcc774da063fb69d6b5b78
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BUG_EYE
+      rect:
+        serializedVersion: 2
+        x: 746.1357
+        y: 286.9345
+        width: 299.4986
+        height: 297.36627
+      alignment: 9
+      pivot: {x: 0.49704513, y: 0.49792305}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9be4a7920b8ca1446bc2e1a351da0b02
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BUG_HEAD
+      rect:
+        serializedVersion: 2
+        x: 1217.1357
+        y: 0
+        width: 790.61206
+        height: 605.5747
+      alignment: 9
+      pivot: {x: 0.49691153, y: 0.7836299}
+      border: {x: 0, y: 0, z: 0, w: 44}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 164add14f72b66744a82e45b52bf1a8f
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 9c571ee1bd0cd5a439eecd505d8b7188
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+  spritePackingTag: 
+  userData: 636657164056594052
+  assetBundleName: 
+  assetBundleVariant: 
