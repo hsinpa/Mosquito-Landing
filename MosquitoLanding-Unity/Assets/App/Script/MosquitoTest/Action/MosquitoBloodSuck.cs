@@ -12,22 +12,19 @@ public class MosquitoBloodSuck {
 
 	private float bloodSeekAmount = 0, bloodSeekPower = 5;
 
-	private float maxFatSize = 2.5f, maxSpeedDiminish = 40;
+	private float maxFatSize = 2.5f, maxSpeedDiminish = 150;
 
 	private SpriteMeshInstance _bodySprite;
-	private Material _bodyMaterial;
 
 	private float d_speed, d_rotate_speed;
 
 	public MosquitoBloodSuck(MosquitoHandler p_mosquito, SpriteMeshInstance p_body_sprite) {
 		_mosquito = p_mosquito;
 		_bodySprite = p_body_sprite;
-		_bodyMaterial = _bodySprite.sharedMaterial;
 
 		d_speed = p_mosquito.speed;
 		d_rotate_speed = p_mosquito.rotateSpeed;
 
-		_bodyMaterial.SetFloat ("_Middle", 0.01f);
 		_bodySprite.transform.localScale = Vector3.one;
 		_mosquito.OnStatusChange += OnStatusChange;
 	}
@@ -52,12 +49,12 @@ public class MosquitoBloodSuck {
 		if (_mosquito.currentStatus != MosquitoHandler.Status.SuckBlood) return;
 
 		//imbibe too much blood.
-		if (_mosquito._bloodSeekAmount >= _mosquito._totalBloodSeekAmount) {			
+		if (_mosquito._bloodSeekAmount >= _mosquito._totalBloodSeekAmount) {
+			_mosquito.DeadAnimationHandler(EventFlag.Death.OverImbeded);		
 			return;
 		}
 
 		float newAddedBlood = bloodSeekPower * Time.deltaTime * 0.4f;
-		// bloodSeekAmount += newAddedBlood;
 		_mosquito._bloodSeekAmount += newAddedBlood;
 	}
 
@@ -74,6 +71,5 @@ public class MosquitoBloodSuck {
 		timer = Time.time;
 		waitUntilTime = timer + p_append_time;
 	}
-
 
 }

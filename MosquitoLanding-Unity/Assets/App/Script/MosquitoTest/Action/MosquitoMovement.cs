@@ -60,13 +60,16 @@ public class MosquitoMovement {
 	}
 
 	public void OnFixedUpdate() {
-		if (_mosquitoHandler.currentStatus == MosquitoHandler.Status.Dead) return;
+		if (_mosquitoHandler.currentStatus == MosquitoHandler.Status.Dead ||
+			 _rigidBody.bodyType != RigidbodyType2D.Dynamic) return;
 
 		float translation = ( inputManager.IsFrontClick() + 
 						((inputManager.IsLeftClick() + inputManager.IsRightClick() == 2) ? 1 : 0) )
-						* _mosquitoHandler.speed;
+						* _mosquitoHandler.speed * Time.deltaTime * 10;
 
-        float rotation = -(inputManager.IsLeftClick() - inputManager.IsRightClick()) * _mosquitoHandler.rotateSpeed;
+        float rotation = -(inputManager.IsLeftClick() - inputManager.IsRightClick()) * _mosquitoHandler.rotateSpeed * Time.deltaTime * 10;
+
+		//HOW TO LEAVE SUCKBLOOD STATUS
 		if (_mosquitoHandler.currentStatus == MosquitoHandler.Status.SuckBlood) {
 
 			if ((headAngle <= 60 || headAngle >= 300) && rotation > 0) rotation = 0;
@@ -116,7 +119,7 @@ public class MosquitoMovement {
 		int totalLine = 20;
 
 		List<Vector2> bodyPoint = new List<Vector2>();
-
+		
 		for (int i = 1; i <= totalLine; i++) {
 			var x = lineRadius * Mathf.Cos((perDegree * i  )* Mathf.Deg2Rad);
 			var y = lineRadius * Mathf.Sin((perDegree * i )* Mathf.Deg2Rad);
