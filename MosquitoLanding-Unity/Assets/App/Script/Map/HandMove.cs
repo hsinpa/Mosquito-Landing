@@ -23,7 +23,7 @@ public class HandMove : MonoBehaviour {
     // Use this for initialization
     void Start () {
         Attack();
-
+        GetComponent<Rigidbody2D>().AddForce(gun.forward * bulletSpeed);
     }
 	
 	// Update is called once per frame
@@ -46,8 +46,8 @@ public class HandMove : MonoBehaviour {
         {
             ani.runtimeAnimatorController = IdleAni;
         }
-       
 
+        
     }
 
     public void runtotarget()
@@ -85,6 +85,11 @@ public class HandMove : MonoBehaviour {
         else
         {
             ani.SetFloat("runspeed", 0f);
+            /*if (v4.y > 3.5f)
+            {
+                ani.SetTrigger("JumpAttack");
+            }*/
+
         }
     }
 
@@ -181,5 +186,19 @@ public class HandMove : MonoBehaviour {
             
         }*/
     }
+
+    public Rigidbody2D bullet;
+    public Transform gun;
+    public float bulletSpeed;
+    public void GunFire()
+    {
+        Rigidbody2D br = Instantiate(bullet, gun.position, gun.rotation);
+        br.AddForce((gun.transform.right+new Vector3(0,Random.Range(0.5f,-0.5f),0)) * bulletSpeed);
+        Destroy(br, Random.Range(1f,3f));
+    }
+
+
+
+
 
 }
