@@ -11,8 +11,8 @@ public class SightLineCollider : MonoBehaviour {
     bool see;
 	// Use this for initialization
 	void Start () {
-		
-	}
+        handMove = GetComponentInParent<HandMove>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -44,7 +44,7 @@ public class SightLineCollider : MonoBehaviour {
     {
        if(col.tag == "Player")
         {
-            handMove = GetComponentInParent<HandMove>();
+            
             see = true;
         }
     }
