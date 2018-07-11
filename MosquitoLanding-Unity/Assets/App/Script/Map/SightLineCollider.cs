@@ -20,7 +20,7 @@ public class SightLineCollider : MonoBehaviour {
         {
             if (tt>sighttime)
             {
-                handMove.alert = true;
+                handMove._currentState = HandMove.State.Attack;
             }
             tt += Time.deltaTime;
             EyeSprite.color = new Color(EyeSprite.color.r, EyeSprite.color.g, EyeSprite.color.b, Mathf.Lerp(EyeSprite.color.a, 1, 0.1f));
@@ -31,7 +31,7 @@ public class SightLineCollider : MonoBehaviour {
         }
         else
         {
-            if (handMove.alert==false) {
+            if (handMove._currentState == HandMove.State.Idle) {
                 if (tt > 0)
                     tt -= Time.deltaTime;
                 EyeSprite.color = Color.Lerp(EyeSprite.color, new Color(1, 1, 1, 0), 0.05f);
