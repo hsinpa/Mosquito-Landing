@@ -50,9 +50,10 @@ public class GameController : Observer {
 	private void GameStart() {
 		CleanUp();
 		SpriteRenderer backgroundRenderer = view.GetViewObject("background").GetComponent<SpriteRenderer>();
-		Debug.Log(_camera.name);
+		SpawnPoint spawnPoint = view.GetViewObject<SpawnPoint>();
+
 		
-		_mosquitoHandler.SetUp(_camera);
+		_mosquitoHandler.SetUp(_camera, spawnPoint);
 		_camera.SetUp(backgroundRenderer);
 		_background.SetUp();
 	}

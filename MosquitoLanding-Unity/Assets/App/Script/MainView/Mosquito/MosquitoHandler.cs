@@ -52,6 +52,7 @@ public class MosquitoHandler : BaseCharacter
 
     private MosquitoMovement _mosquitoMovement;
     private MosquitoBloodSuck _mosquitoBloodSucker;
+    private SpawnPoint _spawnPoint;
 
     public delegate void OnStatusChangeEvent(Status p_status);
 
@@ -91,11 +92,12 @@ public class MosquitoHandler : BaseCharacter
     #endregion
 
     // Use this for initialization
-    public void SetUp(CameraHandler p_camera)
+    public void SetUp(CameraHandler p_camera, SpawnPoint p_spawnPoint)
     {
         _rigidBody = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _camera = p_camera;
+        _spawnPoint = p_spawnPoint;
         
         _mosquitoMovement = new MosquitoMovement(this, _camera);
         _mosquitoBloodSucker = new MosquitoBloodSuck(this,
@@ -125,8 +127,7 @@ public class MosquitoHandler : BaseCharacter
         _rigidBody.rotation = 0;
         _animator.enabled = true;
 
-		transform.position = Vector2.zero;
-        
+		transform.position = _spawnPoint.transform.position;
         _camera.SetAnimation(CameraHandler.State.Default, transform);
     }
 
