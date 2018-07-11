@@ -7,6 +7,15 @@ public class MainApp : Singleton<MainApp> {
 	protected MainApp () {} // guarantee this will be always a singleton only - can't use the constructor!
 
 	public Subject subject;
+
+	public GameView view {
+		get {
+			Transform t_view = transform.Find("view");
+			if (t_view) return t_view.GetComponent<GameView>();
+			return null;
+		}
+	}
+	
 	private Observer[] observers = new Observer[0];
 
 	void Awake() {

@@ -28,10 +28,12 @@ public class MosquitoMovement {
 		_camera = p_camera;
 
 		accelerateSpeed = defaultAccelerateSpeed;
+		
 
 		inputManager = new MosquitoInputManager();
 
 		_mosquitoHandler.OnStatusChange += OnStatusChange;
+
 	}
 
 	public void OnStatusChange(MosquitoHandler.Status p_status) {
@@ -147,11 +149,11 @@ public class MosquitoMovement {
 			headAngle = ((180 / Mathf.PI) * Mathf.Atan2(faceDir.y, faceDir.x)) + 90;
 
 			headObject.rotation = Quaternion.Lerp(headObject.rotation, Quaternion.Euler(0, 0, (headAngle)), 0.3f);
-			_camera.SetAnimation(CameraHandler.State.FollowTarget, _mosquitoBody, 3);
+			_camera.SetAnimation(CameraHandler.State.Enlarge, _mosquitoBody, 3);
 
 		} else {
 			headObject.rotation = Quaternion.Lerp(headObject.rotation, Quaternion.Euler(Vector3.zero), 0.5f);
-			_camera.SetAnimation(CameraHandler.State.Default);
+			_camera.SetAnimation(CameraHandler.State.Default, _mosquitoBody);
 			headAngle = 0;
 		}
 	}

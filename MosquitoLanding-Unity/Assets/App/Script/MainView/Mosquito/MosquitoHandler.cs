@@ -91,11 +91,12 @@ public class MosquitoHandler : BaseCharacter
     #endregion
 
     // Use this for initialization
-    void Start()
+    public void SetUp(CameraHandler p_camera)
     {
         _rigidBody = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-        _camera = Camera.main.transform.GetComponent<CameraHandler>();
+        _camera = p_camera;
+        
         _mosquitoMovement = new MosquitoMovement(this, _camera);
         _mosquitoBloodSucker = new MosquitoBloodSuck(this,
         transform.Find("BUG_BODY DOWN").GetComponent<Anima2D.SpriteMeshInstance>());
@@ -107,10 +108,10 @@ public class MosquitoHandler : BaseCharacter
             bodyContainer.Add(child.transform.name, new MosquitoBodyContainer(child.transform, child.localPosition, child.localRotation));
         }
 
-        SetUp();
+        Init();
     }
 
-    public void SetUp()
+    private void Init()
     {		
         ResumeBodyPosition();
 		EnableChildRigidCollision(false);
@@ -125,6 +126,8 @@ public class MosquitoHandler : BaseCharacter
         _animator.enabled = true;
 
 		transform.position = Vector2.zero;
+        
+        _camera.SetAnimation(CameraHandler.State.Default, transform);
     }
 
     void FixedUpdate()
@@ -250,6 +253,6 @@ public class MosquitoHandler : BaseCharacter
     {
         yield return new WaitForSeconds(waitTime);
 
-        SetUp();
+        Init();
     }
 }
