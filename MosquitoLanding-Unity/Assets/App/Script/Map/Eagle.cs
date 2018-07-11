@@ -55,7 +55,7 @@ public class Eagle : MonoBehaviour {
                 }
                
             }
-            transform.right = new Vector2 ((target.position - transform.position).x, (target.position - transform.position).y);
+            transform.right = new Vector2 ((target.position - transform.position).x, (target.position - transform.position).y)*-1;
             t += Time.deltaTime;
             if (t > 3)
             {
@@ -76,6 +76,7 @@ public class Eagle : MonoBehaviour {
                 if (i + 1 < neck.Count)
                 {
                     neck[i].position = Vector3.Lerp(neck[i].position, neck[i+1].position, sSpeed);
+                    if(i>0)
                     neck[i].right = -(neck[i + 1].position - neck[i].position);
                 }
                 

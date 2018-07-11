@@ -58,7 +58,7 @@ public class HandMove : MonoBehaviour {
 
         if (v4.x > 1f)
         {
-            if(v4.x > 3f)
+            if(v4.x > 2f)
                 ani.SetFloat("runspeed", 1f);
 
             ani.transform.localScale = new Vector3(1, 1, 1);
@@ -72,7 +72,7 @@ public class HandMove : MonoBehaviour {
         else if (v4.x < -1f)
         {
             
-            if (v4.x < -3f)
+            if (v4.x < -2f)
                 ani.SetFloat("runspeed", 1f);
 
             ani.transform.localScale = new Vector3(-1, 1, 1);
