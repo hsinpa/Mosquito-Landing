@@ -34,10 +34,10 @@ public class CameraHandler : MonoBehaviour
         _camera = GetComponent<Camera>();
 		_currentState = State.Default;
 
-        _max_top = bgSprite.size.y * 0.5f;
+        _max_top = bgSprite.bounds.size.y * 0.5f;
         _max_bottom = -_max_top;
 
-        _max_right = bgSprite.size.x * 0.5f;
+        _max_right = bgSprite.bounds.size.x * 0.5f;
         _max_left = -_max_right;
 
         // float width = height * Screen.width / Screen.height;

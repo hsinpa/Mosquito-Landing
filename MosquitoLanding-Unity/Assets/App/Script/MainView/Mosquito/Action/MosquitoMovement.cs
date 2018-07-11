@@ -116,7 +116,7 @@ public class MosquitoMovement {
 
 
 	private List<Vector2> FindNearestBodySkin() {
-		float lineRadius = 2.5f;
+		float lineRadius = 1.5f;
 		float perDegree = 18;
 		int totalLine = 20;
 

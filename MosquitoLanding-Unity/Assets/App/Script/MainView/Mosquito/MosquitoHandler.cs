@@ -111,7 +111,7 @@ public class MosquitoHandler : BaseCharacter
         Init();
     }
 
-    private void Init()
+    public void Init()
     {		
         ResumeBodyPosition();
 		EnableChildRigidCollision(false);
@@ -175,7 +175,7 @@ public class MosquitoHandler : BaseCharacter
 
         currentStatus = Status.Dead;
 
-        StartCoroutine(WaitAndRestart(3));
+        StartCoroutine(WaitAndRestart(1));
     }
 
     private void ResumeBodyPosition()
@@ -253,6 +253,11 @@ public class MosquitoHandler : BaseCharacter
     {
         yield return new WaitForSeconds(waitTime);
 
-        Init();
+        float bloodEmbide = _bloodSeekAmount / _totalBloodSeekAmount;
+
+        int brokenPartCount = _seperableReporters.Count(x=>x.IsBreakUp());
+
+        MainApp.Instance.subject.notify(EventFlag.Game.GameEnd, bloodEmbide, brokenPartCount);
+        // Init();
     }
 }

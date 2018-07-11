@@ -12,9 +12,14 @@ public class EventFlag : MonoBehaviour {
 		public const string SetUp = "game.setup@event";
 		public const string EnterGame = "game.enter@event";
 
-		public const string GameStart = "game.start@event";
+		public const string Restart = "game.start@event";
 
 		public const string GameEnd = "game.end@event";
+	}
+
+	public class Modal {
+		public const string Open = "modal.open@event";
+		public const string Close = "modal.close@event";
 	}
 
 	public class Death {
