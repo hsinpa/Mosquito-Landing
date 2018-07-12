@@ -2,11 +2,13 @@
 using System.Collections;
 
 public class EventFlag : MonoBehaviour {
-	public static int normalLayer = 0;
-	public static int examineLayer = 9;
+	public const int normalLayer = 0;
+	public const int humanBodyLayer = 9;
+	public const int mosquitoLayer = 10;
+	public const int harmfulLayer = 12;
 
-	public static int normalRaycastLayer = 1 << 0;
-	public static int BodySkinRaycastLayer = 1 << 9;
+	public const int normalRaycastLayer = 1 << 0;
+	public const int BodySkinRaycastLayer = 1 << 9;
 
 	public class Game {
 		public const string SetUp = "game.setup@event";

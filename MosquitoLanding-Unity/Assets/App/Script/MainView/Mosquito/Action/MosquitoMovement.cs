@@ -67,12 +67,13 @@ public class MosquitoMovement {
 
 		float translation = ( inputManager.IsFrontClick() + 
 						((inputManager.IsLeftClick() + inputManager.IsRightClick() == 2) ? 1 : 0) )
-						* _mosquitoHandler.speed * Time.deltaTime * 10;
+						* _mosquitoHandler.speed * Time.deltaTime * 5;
 
         float rotation = -(inputManager.IsLeftClick() - inputManager.IsRightClick()) * _mosquitoHandler.rotateSpeed * Time.deltaTime * 10;
 
 		//HOW TO LEAVE SUCKBLOOD STATUS
-		if (_mosquitoHandler.currentStatus == MosquitoHandler.Status.SuckBlood) {
+		if (_mosquitoHandler.currentStatus == MosquitoHandler.Status.SuckBlood ||
+			_mosquitoHandler.currentStatus == MosquitoHandler.Status.Landing) {
 
 			if ((headAngle <= 60 || headAngle >= 300) && rotation > 0) rotation = 0;
 
@@ -101,6 +102,8 @@ public class MosquitoMovement {
 	private void HorizontalMove(float p_variable) {
 		if (p_variable != 0) {
 			DirectionalMove(p_variable, _mosquitoBody.right);
+			// _rigidBody.rotation = -p_variable*0.5f;
+			_rigidBody.rotation = Mathf.Lerp(_rigidBody.rotation, -p_variable*0.5f, 0.1f);
 		}
 	}
 
@@ -156,11 +159,5 @@ public class MosquitoMovement {
 			_camera.SetAnimation(CameraHandler.State.Default, _mosquitoBody);
 			headAngle = 0;
 		}
-	}
-
-
-	public void OnCollisionEnter(Vector2 p_velocity, GameObject p_target) {
-		Vector2 maxLandingVelocity = new Vector2(0.5f, 0.5f);
-
 	}
 }

@@ -32,7 +32,7 @@ public class CameraHandler : MonoBehaviour
         bgSprite = p_background;
 
         _camera = GetComponent<Camera>();
-		_currentState = State.Default;
+        _currentState = State.Default;
 
         _max_top = bgSprite.bounds.size.y * 0.5f;
         _max_bottom = -_max_top;
@@ -44,6 +44,11 @@ public class CameraHandler : MonoBehaviour
 
 
         // Debug.Log("Top " + height +", Bottom " + (-height));
+    }
+
+    public void ForceAlignWithTarget(Transform p_target)
+    {
+        if (p_target != null) _camera.transform.position = p_target.position;
     }
 
     public void SetAnimation(State p_state, Transform p_target = null, float p_camera_size = 0)
@@ -121,11 +126,9 @@ public class CameraHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_currentState != State.Idle && _camera != null)
-        {
 
-            AnimationHandler();
-        }
+        AnimationHandler();
+
     }
 
 }
