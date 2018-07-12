@@ -13,6 +13,7 @@ public class Eagle : MonoBehaviour {
     CircleCollider2D cc2d;
     public int necknum;
     public Transform neckobj;
+    public Transform lookobj;
    
     // Use this for initialization
     void Start () {
@@ -71,6 +72,7 @@ public class Eagle : MonoBehaviour {
         }
         else
         {
+            transform.right = new Vector2((lookobj.position - transform.position).x, (lookobj.position - transform.position).y) * -1;
             for (int i = 0; i < neck.Count; i++)
             {
                 if (i + 1 < neck.Count)

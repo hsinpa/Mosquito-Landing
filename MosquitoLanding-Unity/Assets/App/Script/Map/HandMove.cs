@@ -23,7 +23,8 @@ public class HandMove : MonoBehaviour {
     {
         Idle,
         Attack,
-        Underarm
+        Underarm,
+        Wander
     }
 
     public State _currentState;
@@ -31,13 +32,25 @@ public class HandMove : MonoBehaviour {
 
     public RuntimeAnimatorController IdleAni;
     public RuntimeAnimatorController AttackAni;
+
+    public Collider2D rc;
+    public Collider2D lc;
     // Use this for initialization
 
     Vector3 starpos;
+    float ttt;
+    public float sighttime;
+    float tt;
+    public SpriteRenderer EyeSprite;
+    public bool see;
+
+
     void Start () {
         player = GameObject.Find("Mosquito").transform;
         Attack();
+        tt = Time.time;
         starpos = transform.position;
+        StartCoroutine(ModeChange(Random.Range(8f,12f)));
        // GetComponent<Rigidbody2D>().AddForce(gun.forward * bulletSpeed);
     }
 	
@@ -49,6 +62,13 @@ public class HandMove : MonoBehaviour {
         {
             case State.Idle:
                 ani.runtimeAnimatorController = IdleAni;
+                ani.SetBool("Wander", false);
+                break;
+
+            case State.Wander:
+                ani.runtimeAnimatorController = IdleAni;
+                ani.SetBool("Wander", true);
+                wander();
                 break;
 
             case State.Attack:
@@ -59,7 +79,10 @@ public class HandMove : MonoBehaviour {
                 runtotarget();
                 if (v4.y > 3f)
                 {
-                    _currentState = State.Underarm;
+                    if (v4.x>-0.4&&v4.x<0.4)
+                    {
+                        _currentState = State.Underarm;
+                    }
                 }
                 break;
 
@@ -72,11 +95,96 @@ public class HandMove : MonoBehaviour {
 
                 break;
         }
+
+        if (see)
+        {
+            if (tt > sighttime)
+            {
+                toAttack();
+            }
+            tt += Time.deltaTime;
+            EyeSprite.color = new Color(EyeSprite.color.r, EyeSprite.color.g, EyeSprite.color.b, Mathf.Lerp(EyeSprite.color.a, 1, 0.1f));
+            if (EyeSprite.color.b > 0)
+            {
+                EyeSprite.color = new Color(EyeSprite.color.r, EyeSprite.color.g - ((1 / sighttime) * Time.deltaTime), EyeSprite.color.b - ((1 / sighttime) * Time.deltaTime), EyeSprite.color.a);
+            }
+        }
+        else
+        {
+            if (_currentState == HandMove.State.Idle)
+            {
+                if (tt > 0)
+                    tt -= Time.deltaTime;
+                EyeSprite.color = Color.Lerp(EyeSprite.color, new Color(1, 1, 1, 0), 0.05f);
+            }
+
+        }
+
+    }
+
+    IEnumerator ModeChange(float WaitTime)
+    {
+        yield return new WaitForSeconds(WaitTime);
+        switch (_currentState)
+        {
+            case State.Idle:
+                _currentState = State.Wander;
+                StartCoroutine(ModeChange(Random.Range(8f, 15f)));
+                break;
+
+            case State.Wander:
+                _currentState = State.Idle;
+                StartCoroutine(ModeChange(Random.Range(3f, 7f)));
+                break;
+        }
+        
+    }
+
+    public void toAttack()
+    {
+        if (Time.time - ttt>5)
+        {
+            _currentState = State.Attack;
+        }
+        else
+        {
+            see = false;
+        }
+       
+    }
+
+    private void wander()
+    {
+        Vector2 RV2 = starpos + new Vector3(17, 0);
+        Vector2 LV2 = starpos + new Vector3(-17, 0);
+        float Rd = starpos.x + 17;
+        float Ld = starpos.x - 17;
+        if (transform.position.x > Rd)
+        {
+            ani.transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else if (transform.position.x < Ld)
+        {
+            ani.transform.localScale = new Vector3(1, 1, 1);
+        }
+
+
     }
 
     public void repos()
     {
         transform.position = new Vector3(transform.position.x,starpos.y);
+    }
+
+
+    public void rest()
+    {
+        _currentState = State.Idle;
+        see = false;
+        tt = 0;
+        StopCoroutine(ModeChange(0));
+        StartCoroutine(ModeChange(Random.Range(12f, 15f)));
+        transform.position = new Vector3(starpos.x, starpos.y);
     }
 
     public void check()
@@ -129,6 +237,8 @@ public class HandMove : MonoBehaviour {
             if (t >1.5f)
             {
                 player_pos = player.position;
+                
+                player.GetComponent<MosquitoHandler>().DeadAnimationHandler(EventFlag.Death.Squash);
                 fire = true;
                 Invoke("over", 0.3f);
                 t = 0;
@@ -158,11 +268,15 @@ public class HandMove : MonoBehaviour {
             {                
                 righthand.position = Vector2.Lerp(righthand.position, player_pos, 0.2f);
                 lefthand.position = Vector2.Lerp(lefthand.position, player_pos, 0.2f);
+                //rc.enabled = true;
+                //lc.enabled = true;
             }
             else
             {
                 righthand.position = Vector2.Lerp(righthand.position, new Vector2(player.position.x - 0.5f, player.position.y), 0.01f);
                 lefthand.position = Vector2.Lerp(lefthand.position, new Vector2(player.position.x + 0.5f, player.position.y) , 0.01f);
+                rc.enabled = false;
+                lc.enabled = false;
             }
         }
        
