@@ -1278,6 +1278,11 @@ MonoBehaviour:
   _currentState: 0
   IdleAni: {fileID: 9100000, guid: fce95eb8ff327e74b849f5c6f82dab13, type: 2}
   AttackAni: {fileID: 9100000, guid: 421a0b0e6f6bb19488afa31285a049a6, type: 2}
+  rc: {fileID: 0}
+  lc: {fileID: 0}
+  sighttime: 0
+  EyeSprite: {fileID: 0}
+  see: 0
   bullet: {fileID: 0}
   gun: {fileID: 4015555758008654}
   bulletSpeed: 3000
@@ -1418,8 +1423,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d08419a52c180a41bee1db35e9ec7e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sighttime: 1
-  EyeSprite: {fileID: 212230482728200514}
 --- !u!114 &114504776819693792
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -39,8 +39,8 @@ public class MosquitoHandler : BaseCharacter
         }
     }
 
-    private float _collsionResistance = 1f;
-    private float _collsionSecResistance = 0.6f;
+    private float _collsionResistance = 1.5f;
+    private float _collsionSecResistance = 1f;
 
     [Header("Blood Related Setting")]
     public float _bloodSeekAmount = 0;
@@ -62,7 +62,7 @@ public class MosquitoHandler : BaseCharacter
         Idle,
         Landing,
         SuckBlood,
-        Dead
+        End
     }
 
     public Status currentStatus
@@ -154,7 +154,7 @@ public class MosquitoHandler : BaseCharacter
 
     public void DeadAnimationHandler(string p_death_style)
     {
-        if (currentStatus == Status.Dead) return;
+        if (currentStatus == Status.End) return;
 
 		//Assign explosion power
         float explodePower = 0;
@@ -184,7 +184,7 @@ public class MosquitoHandler : BaseCharacter
             item.GetComponent<Rigidbody2D>().AddForceAtPosition(force, transform.position);
         }
 
-        currentStatus = Status.Dead;
+        currentStatus = Status.End;
         _camera.SetAnimation(CameraHandler.State.Default, transform);
         StartCoroutine(WaitAndRestart(2));
     }
@@ -202,7 +202,7 @@ public class MosquitoHandler : BaseCharacter
     {
         // _mosquitoCollision.OnCollision(p_collision, p_receiver);
         if (p_collision.gameObject == this.gameObject || p_collision.gameObject.layer == EventFlag.mosquitoLayer ||
-             this._currentStatus == Status.Dead) return;
+             this._currentStatus == Status.End) return;
         float velocity = p_collision.relativeVelocity.sqrMagnitude;
         Debug.Log(velocity);
 
@@ -217,6 +217,7 @@ public class MosquitoHandler : BaseCharacter
             }
             else
             {
+                Debug.Log("Die with leg");
                 DeadAnimationHandler(EventFlag.Death.HitWall);
             }
 
@@ -224,10 +225,11 @@ public class MosquitoHandler : BaseCharacter
         //Die
         else if (velocity >= _collsionResistance)
         {
+                            Debug.Log("Die directly");
             DeadAnimationHandler(EventFlag.Death.HitWall);
         }
 
-        if (currentStatus != Status.Dead) {
+        if (currentStatus != Status.End) {
             switch (p_collision.gameObject.layer)
             {
                 case EventFlag.normalLayer: {
@@ -241,6 +243,8 @@ public class MosquitoHandler : BaseCharacter
                 }break;
 
                 case EventFlag.harmfulLayer : {
+                    Debug.Log("Die harmful");
+
                     DeadAnimationHandler(EventFlag.Death.Squash);
                 }break;
             }
@@ -273,11 +277,12 @@ public class MosquitoHandler : BaseCharacter
     private IEnumerator WaitAndRestart(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
-        if (_currentStatus == Status.Dead || _currentStatus == Status.Landing) {
+        if (_currentStatus == Status.End || _currentStatus == Status.Landing) {
             float bloodEmbide = _bloodSeekAmount / _totalBloodSeekAmount;
 
             int brokenPartCount = _seperableReporters.Count(x=>x.IsBreakUp());
             _assignWaitRestartCoroutine = null;
+            _currentStatus = Status.End;
             MainApp.Instance.subject.notify(EventFlag.Game.GameEnd, bloodEmbide, brokenPartCount);
         }
     }

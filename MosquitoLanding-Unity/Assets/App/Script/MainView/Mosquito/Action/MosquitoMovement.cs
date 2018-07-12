@@ -49,20 +49,20 @@ public class MosquitoMovement {
 				_rigidBody.drag = 8;
 			break;
 
-			case MosquitoHandler.Status.Dead:
+			case MosquitoHandler.Status.End:
 
 			break;
 		}
 	}
 
 	public void OnUpdate() {
-		if (_mosquitoHandler.currentStatus == MosquitoHandler.Status.Dead) return;
+		if (_mosquitoHandler.currentStatus == MosquitoHandler.Status.End) return;
 		
 		RotateHeadToNearstTarget();
 	}
 
 	public void OnFixedUpdate() {
-		if (_mosquitoHandler.currentStatus == MosquitoHandler.Status.Dead ||
+		if (_mosquitoHandler.currentStatus == MosquitoHandler.Status.End ||
 			 _rigidBody.bodyType != RigidbodyType2D.Dynamic) return;
 
 		float translation = ( inputManager.IsFrontClick() + 

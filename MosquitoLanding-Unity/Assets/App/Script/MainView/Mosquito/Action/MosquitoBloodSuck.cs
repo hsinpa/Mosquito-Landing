@@ -37,7 +37,7 @@ public class MosquitoBloodSuck {
 				ResetTimer();
 			break;
 
-			case MosquitoHandler.Status.Dead:
+			case MosquitoHandler.Status.End:
 
 			break;
 		}
