@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MosquitoInput;
 using System.Linq;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class MosquitoHandler : BaseCharacter
@@ -55,7 +56,7 @@ public class MosquitoHandler : BaseCharacter
     private SpawnPoint _spawnPoint;
 
     public delegate void OnStatusChangeEvent(Status p_status);
-
+    private Coroutine _assignWaitRestartCoroutine;
     public enum Status
     {
         Idle,
@@ -75,6 +76,9 @@ public class MosquitoHandler : BaseCharacter
 
             if (value != _currentStatus)
             {
+                if (_assignWaitRestartCoroutine != null)
+                    StopCoroutine(_assignWaitRestartCoroutine);
+
                 if (OnStatusChange != null)
                     OnStatusChange(value);
                 _currentStatus = value;
@@ -87,7 +91,8 @@ public class MosquitoHandler : BaseCharacter
 
     private Dictionary<string, MosquitoBodyContainer> bodyContainer = new Dictionary<string, MosquitoBodyContainer>();
     private List<CollisionReporter> _seperableReporters;
-
+    private Text _subtitleText;
+    private TextEffect.TypeWriter _typeWriter;
 
     #endregion
 
@@ -110,6 +115,11 @@ public class MosquitoHandler : BaseCharacter
             bodyContainer.Add(child.transform.name, new MosquitoBodyContainer(child.transform, child.localPosition, child.localRotation));
         }
 
+        _camera.ForceAlignWithTarget(transform);
+
+        _subtitleText = transform.Find("world_ui/subtitle").GetComponent<Text>();
+        _typeWriter = GetComponentInChildren<TextEffect.TypeWriter>();
+        _typeWriter.AddMessage(_subtitleText, "OK, I'm in");
         Init();
     }
 
@@ -175,8 +185,8 @@ public class MosquitoHandler : BaseCharacter
         }
 
         currentStatus = Status.Dead;
-
-        StartCoroutine(WaitAndRestart(1));
+        _camera.SetAnimation(CameraHandler.State.Default, transform);
+        StartCoroutine(WaitAndRestart(2));
     }
 
     private void ResumeBodyPosition()
@@ -190,42 +200,52 @@ public class MosquitoHandler : BaseCharacter
 
     public override void OnCollisionHandler(Collision2D p_collision, Transform p_receiver)
     {
-        if (p_collision.gameObject != this.gameObject && p_collision.gameObject.layer != 10
-            && currentStatus == Status.Idle)
+        // _mosquitoCollision.OnCollision(p_collision, p_receiver);
+        if (p_collision.gameObject == this.gameObject || p_collision.gameObject.layer == EventFlag.mosquitoLayer ||
+             this._currentStatus == Status.Dead) return;
+        float velocity = p_collision.relativeVelocity.sqrMagnitude;
+        Debug.Log(velocity);
+
+        //Broke leg or something
+        if (velocity > _collsionSecResistance && velocity < _collsionResistance)
         {
-
-            base.OnCollisionHandler(p_collision, p_receiver);
-
-            float velocity = p_collision.relativeVelocity.sqrMagnitude;
-
-            Debug.Log(velocity);
-
-            if (velocity > _collsionSecResistance && velocity < _collsionResistance)
+            CollisionReporter seperableObject = _seperableReporters.Find(x => !x.IsBreakUp() &&
+                                                x.gameObject == p_receiver.gameObject);
+            if (seperableObject != null)
             {
-                CollisionReporter seperableObject = _seperableReporters.Find(x => !x.IsBreakUp() &&
-                                                   x.gameObject == p_receiver.gameObject);
-                if (seperableObject != null)
-                {
-                    seperableObject.SeperateFromMainBody();
-                }
-                else
-                {
-                    DeadAnimationHandler(EventFlag.Death.HitWall);
-                }
-
+                seperableObject.SeperateFromMainBody();
             }
-            else if (velocity >= _collsionResistance)
+            else
             {
                 DeadAnimationHandler(EventFlag.Death.HitWall);
             }
 
-            if (p_collision.gameObject.layer == 9)
-            {
-                currentStatus = Status.SuckBlood;
-            }
-
-            // Debug.Log("Landing power : " + velocity);
         }
+        //Die
+        else if (velocity >= _collsionResistance)
+        {
+            DeadAnimationHandler(EventFlag.Death.HitWall);
+        }
+
+        if (currentStatus != Status.Dead) {
+            switch (p_collision.gameObject.layer)
+            {
+                case EventFlag.normalLayer: {
+                    if (p_collision.gameObject.GetComponent<ExitPoint>() != null) {
+                        _assignWaitRestartCoroutine = StartCoroutine(WaitAndRestart(2));
+                        currentStatus = Status.Landing;
+                    }
+                }break;
+                case EventFlag.humanBodyLayer : {
+                    currentStatus = Status.SuckBlood;
+                }break;
+
+                case EventFlag.harmfulLayer : {
+                    DeadAnimationHandler(EventFlag.Death.Squash);
+                }break;
+            }
+        }
+
     }
 
     private void EnableChildRigidCollision(bool p_enable)
@@ -253,12 +273,13 @@ public class MosquitoHandler : BaseCharacter
     private IEnumerator WaitAndRestart(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
+        if (_currentStatus == Status.Dead || _currentStatus == Status.Landing) {
+            float bloodEmbide = _bloodSeekAmount / _totalBloodSeekAmount;
 
-        float bloodEmbide = _bloodSeekAmount / _totalBloodSeekAmount;
-
-        int brokenPartCount = _seperableReporters.Count(x=>x.IsBreakUp());
-
-        MainApp.Instance.subject.notify(EventFlag.Game.GameEnd, bloodEmbide, brokenPartCount);
-        // Init();
+            int brokenPartCount = _seperableReporters.Count(x=>x.IsBreakUp());
+            _assignWaitRestartCoroutine = null;
+            MainApp.Instance.subject.notify(EventFlag.Game.GameEnd, bloodEmbide, brokenPartCount);
+        }
     }
+
 }
