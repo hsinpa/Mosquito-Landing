@@ -24,7 +24,7 @@ public class CameraHandler : MonoBehaviour
     private State _currentState;
 
     private float _max_top, _max_bottom, _max_left, _max_right;
-    private float _camera_height, _camera_width;
+    // private float _camera_height, _camera_width;
 
     // Use this for initialization
     public void SetUp(SpriteRenderer p_background)
@@ -56,36 +56,36 @@ public class CameraHandler : MonoBehaviour
         targetTransform = p_target;
         targetCameraSize = p_camera_size;
 
-        _camera_height = 2f * Camera.main.orthographicSize * 0.5f;
-        _camera_width = _camera_height * Camera.main.aspect;
+        // _camera_height = Camera.main.orthographicSize;
+        // _camera_width = _camera_height * Camera.main.aspect;
 
         _currentState = p_state;
     }
 
-    private Vector3 RecalculateCameraPosition(Vector3 p_target_position)
+    private Vector3 RecalculateCameraPosition(Vector3 p_target_position, float camera_height, float camera_width)
     {
         //Calculate For Y
         float y = p_target_position.y;
 
-        if (p_target_position.y + _camera_height > _max_top)
+        if (p_target_position.y + camera_height >= _max_top)
         {
-            y = _max_top - _camera_height;
+            y = _max_top - camera_height;
         }
-        else if (p_target_position.y - _camera_height < _max_bottom)
+        else if (p_target_position.y - camera_height <= _max_bottom)
         {
-            y = _max_bottom + _camera_height;
+            y = _max_bottom + camera_height;
         }
 
         //Calculate For X
         float x = p_target_position.x;
 
-        if (p_target_position.x + _camera_width > _max_right)
+        if (p_target_position.x + camera_width >= _max_right)
         {
-            x = _max_right - _camera_width;
+            x = _max_right - camera_width;
         }
-        else if (p_target_position.x - _camera_width < _max_left)
+        else if (p_target_position.x - camera_width <= _max_left)
         {
-            x = _max_left + _camera_width;
+            x = _max_left + camera_width;
         }
 
         return new Vector3(x, y, p_target_position.z);
@@ -93,11 +93,12 @@ public class CameraHandler : MonoBehaviour
 
     private bool PlayAnimation(Vector3 p_target_position, float p_camera_size)
     {
-        Vector3 tempCameraPosition = Vector3.Lerp(transform.position, p_target_position, 0.06f);
-        transform.position = RecalculateCameraPosition(tempCameraPosition);
-
         float tempCameraSize = Mathf.Lerp(_camera.orthographicSize, p_camera_size, 0.06f);
         _camera.orthographicSize = tempCameraSize;
+
+
+        Vector3 tempCameraPosition = Vector3.Lerp(transform.position, p_target_position, 0.06f);
+        transform.position = RecalculateCameraPosition(tempCameraPosition, tempCameraSize, tempCameraSize * Camera.main.aspect);
 
         return ((p_target_position - transform.position).magnitude < 0.1f && tempCameraSize < 0.1f);
     }
@@ -119,7 +120,7 @@ public class CameraHandler : MonoBehaviour
                 break;
         }
 
-        if (IsAnimationFinish) _currentState = State.Idle;
+        // if (IsAnimationFinish) _currentState = State.Default;
     }
 
 

@@ -15,6 +15,14 @@ public class MainApp : Singleton<MainApp> {
 			return null;
 		}
 	}
+
+	public Model model {
+		get {
+			Transform t_view = transform.Find("model");
+			if (t_view) return t_view.GetComponent<Model>();
+			return null;
+		}
+	}
 	
 	private Observer[] observers = new Observer[0];
 

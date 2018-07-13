@@ -18,6 +18,9 @@ public class MosquitoBloodSuck {
 
 	private float d_speed, d_rotate_speed;
 
+	private Transform imbibeTarget;
+	private Vector2 distanceBetweenTarget;
+
 	public MosquitoBloodSuck(MosquitoHandler p_mosquito, SpriteMeshInstance p_body_sprite) {
 		_mosquito = p_mosquito;
 		_bodySprite = p_body_sprite;
@@ -27,6 +30,11 @@ public class MosquitoBloodSuck {
 
 		_bodySprite.transform.localScale = Vector3.one;
 		_mosquito.OnStatusChange += OnStatusChange;
+	}
+
+	public void SetTarget(Transform p_target) {
+		imbibeTarget = p_target;
+		distanceBetweenTarget = p_target.position - _mosquito.transform.position;
 	}
 
 	public void OnStatusChange(MosquitoHandler.Status p_status) {
@@ -52,6 +60,10 @@ public class MosquitoBloodSuck {
 		if (_mosquito._bloodSeekAmount >= _mosquito._totalBloodSeekAmount) {
 			_mosquito.DeadAnimationHandler(EventFlag.Death.OverImbeded);		
 			return;
+		}
+
+		if (imbibeTarget != null) {
+			_mosquito.transform.position = new Vector2(imbibeTarget.position.x-distanceBetweenTarget.x ,_mosquito.transform.position.y);
 		}
 
 		float newAddedBlood = bloodSeekPower * Time.deltaTime * 0.4f;
