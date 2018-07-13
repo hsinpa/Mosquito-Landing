@@ -1269,6 +1269,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ani: {fileID: 95148165831447080}
   righthand: {fileID: 4646081985405712}
+  attobj: {fileID: 0}
   lefthand: {fileID: 4161205612332146}
   player: {fileID: 0}
   fire: 0
@@ -1283,6 +1284,7 @@ MonoBehaviour:
   sighttime: 0
   EyeSprite: {fileID: 0}
   see: 0
+  bigtext: {fileID: 0}
   bullet: {fileID: 0}
   gun: {fileID: 4015555758008654}
   bulletSpeed: 3000

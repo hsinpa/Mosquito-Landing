@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/App/Scenes/home page 1.unity
+    guid: 6e9f1f9ff6894a345bfff32ce04b03ab
+  - enabled: 1
     path: Assets/App/Scenes/MosquitoTestScene.unity
     guid: 230149afcde2b48918bfce86925f3c53
   m_configObjects: {}
