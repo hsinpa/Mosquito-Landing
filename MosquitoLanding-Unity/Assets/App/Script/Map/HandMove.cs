@@ -6,6 +6,7 @@ public class HandMove : MonoBehaviour {
 
     public Animator ani;
     public Transform righthand;
+    public Transform attobj;
     public Transform lefthand;
     public Transform player;
     public bool fire;
@@ -44,6 +45,7 @@ public class HandMove : MonoBehaviour {
     public SpriteRenderer EyeSprite;
     public bool see;
 
+    public GameObject bigtext;
 
     void Start () {
         player = GameObject.Find("Mosquito").transform;
@@ -51,6 +53,7 @@ public class HandMove : MonoBehaviour {
         tt = Time.time;
         starpos = transform.position;
         StartCoroutine(ModeChange(Random.Range(8f,12f)));
+        
        // GetComponent<Rigidbody2D>().AddForce(gun.forward * bulletSpeed);
     }
 	
@@ -82,20 +85,22 @@ public class HandMove : MonoBehaviour {
                     if (v4.x>-0.4&&v4.x<0.4)
                     {
                         _currentState = State.Underarm;
+                        
                     }
                 }
                 break;
 
             case State.Underarm:
-                repos();
-                ani.runtimeAnimatorController = IdleAni;
-                ani.SetTrigger("Underarm");
-                gunman.SetActive(true);
-                _currentState = State.Idle;
+                if (bigtext.activeSelf==false) {
+                    bigtext.SetActive(true);
+                   // Invoke("UnderarmFire", 3);
+                    Time.timeScale = 0;
+                }
 
                 break;
         }
 
+    
         if (see)
         {
             if (tt > sighttime)
@@ -122,6 +127,20 @@ public class HandMove : MonoBehaviour {
 
     }
 
+
+    public void UnderarmFire()
+    {
+        Time.timeScale = 1;
+        repos();
+        ani.runtimeAnimatorController = IdleAni;
+        ani.SetTrigger("Underarm");
+
+        gunman.SetActive(true);
+        see = false;
+        tt = 0;
+        _currentState = State.Idle;
+    }
+
     IEnumerator ModeChange(float WaitTime)
     {
         yield return new WaitForSeconds(WaitTime);
@@ -129,12 +148,12 @@ public class HandMove : MonoBehaviour {
         {
             case State.Idle:
                 _currentState = State.Wander;
-                StartCoroutine(ModeChange(Random.Range(8f, 15f)));
+                StartCoroutine(ModeChange(Random.Range(8f, 11f)));
                 break;
 
             case State.Wander:
                 _currentState = State.Idle;
-                StartCoroutine(ModeChange(Random.Range(3f, 7f)));
+                StartCoroutine(ModeChange(Random.Range(3f, 15f)));
                 break;
         }
         
@@ -183,6 +202,7 @@ public class HandMove : MonoBehaviour {
         see = false;
         tt = 0;
         StopCoroutine(ModeChange(0));
+        StopAllCoroutines();
         StartCoroutine(ModeChange(Random.Range(12f, 15f)));
         transform.position = new Vector3(starpos.x, starpos.y);
     }
@@ -199,7 +219,7 @@ public class HandMove : MonoBehaviour {
 
         if (v4.x > 1f)
         {
-            if(v4.x > 2f)
+            if(v4.x > 2.5f)
                 ani.SetFloat("runspeed", 1f);
 
             ani.transform.localScale = new Vector3(1, 1, 1);
@@ -208,7 +228,7 @@ public class HandMove : MonoBehaviour {
         else if (v4.x < -1f)
         {
             
-            if (v4.x < -2f)
+            if (v4.x < -2.5f)
                 ani.SetFloat("runspeed", 1f);
 
             ani.transform.localScale = new Vector3(-1, 1, 1);
@@ -238,7 +258,7 @@ public class HandMove : MonoBehaviour {
             {
                 player_pos = player.position;
                 
-                player.GetComponent<MosquitoHandler>().DeadAnimationHandler(EventFlag.Death.Squash);
+                //player.GetComponent<MosquitoHandler>().DeadAnimationHandler(EventFlag.Death.Squash);
                 fire = true;
                 Invoke("over", 0.3f);
                 t = 0;
@@ -268,8 +288,8 @@ public class HandMove : MonoBehaviour {
             {                
                 righthand.position = Vector2.Lerp(righthand.position, player_pos, 0.2f);
                 lefthand.position = Vector2.Lerp(lefthand.position, player_pos, 0.2f);
-                //rc.enabled = true;
-                //lc.enabled = true;
+                rc.enabled = true;
+                lc.enabled = true;
             }
             else
             {
