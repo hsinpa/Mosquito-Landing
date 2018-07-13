@@ -10,6 +10,7 @@ public class GameController : Observer {
 	BackgroundView _background;
 	GameView view;
 
+	GameModel _gameModel;
 	GameUIController _gameUIController;
 	
     public override void OnNotify(string p_event, params object[] p_objects) {
@@ -22,7 +23,7 @@ public class GameController : Observer {
 				view = MainApp.Instance.view;
 				_mosquitoHandler = view.GetViewObject<MosquitoHandler>();
 				_background = view.GetViewObject<BackgroundView>();
-
+				_gameModel = MainApp.Instance.model.FindModel<GameModel>();
 				_camera = Camera.main.transform.GetComponent<CameraHandler>();
 
 				_gameUIController = GetComponentInChildren<GameUIController>();
@@ -52,8 +53,8 @@ public class GameController : Observer {
 		SpriteRenderer backgroundRenderer = view.GetViewObject("background").GetComponent<SpriteRenderer>();
 		SpawnPoint spawnPoint = view.GetViewObject<SpawnPoint>();
 		_camera.SetUp(backgroundRenderer);
-
 		
+		_gameModel.SetUp(0.7f);
 		_mosquitoHandler.SetUp(_camera, spawnPoint);
 		_background.SetUp();
 	}

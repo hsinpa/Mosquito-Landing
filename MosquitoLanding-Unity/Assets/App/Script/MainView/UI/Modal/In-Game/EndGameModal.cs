@@ -17,7 +17,9 @@ public class EndGameModal : Modal {
 		bloodBall.fillAmount = p_bloodAmount;
 
 		Text infoText = transform.Find("menu/panel/basic_info").GetComponent<Text>();
-		infoText.text = "Broken Parts : " + p_brokenPartCount;
+		infoText.text = (p_bloodAmount >= GameModel.winCondition) ? "Success" : "Explode";
+		infoText.text += "Score : " + Mathf.FloorToInt(p_bloodAmount * 100) + "%";
+		infoText.text += "Broken Parts : " + p_brokenPartCount;
 	}
 
 	public void Restart() {

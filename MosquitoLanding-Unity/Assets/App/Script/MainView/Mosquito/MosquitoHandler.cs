@@ -240,6 +240,7 @@ public class MosquitoHandler : BaseCharacter
                 }break;
                 case EventFlag.humanBodyLayer : {
                     currentStatus = Status.SuckBlood;
+                    _mosquitoBloodSucker.SetTarget(p_collision.transform);
                 }break;
 
                 case EventFlag.harmfulLayer : {
