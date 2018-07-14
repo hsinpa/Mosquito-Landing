@@ -11,6 +11,7 @@ public class GameController : Observer {
 	GameView view;
 
 	GameModel _gameModel;
+	SoundModel _soundModel;
 	GameUIController _gameUIController;
 	
     public override void OnNotify(string p_event, params object[] p_objects) {
@@ -24,6 +25,7 @@ public class GameController : Observer {
 				_mosquitoHandler = view.GetViewObject<MosquitoHandler>();
 				_background = view.GetViewObject<BackgroundView>();
 				_gameModel = MainApp.Instance.model.FindModel<GameModel>();
+				_soundModel = MainApp.Instance.model.FindModel<SoundModel>();
 				_camera = Camera.main.transform.GetComponent<CameraHandler>();
 
 				_gameUIController = GetComponentInChildren<GameUIController>();
@@ -53,9 +55,9 @@ public class GameController : Observer {
 		SpriteRenderer backgroundRenderer = view.GetViewObject("background").GetComponent<SpriteRenderer>();
 		SpawnPoint spawnPoint = view.GetViewObject<SpawnPoint>();
 		_camera.SetUp(backgroundRenderer);
-		
-		_gameModel.SetUp(0.7f);
-		_mosquitoHandler.SetUp(_camera, spawnPoint);
+		_soundModel.SetUp();
+		_gameModel.SetUp(0f);
+		_mosquitoHandler.SetUp(_camera, spawnPoint, _soundModel);
 		_background.SetUp();
 	}
 

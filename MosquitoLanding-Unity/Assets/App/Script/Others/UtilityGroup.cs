@@ -93,7 +93,7 @@ namespace Utility
         /// <returns>The dice.</returns>
         public static int RollDice()
         {
-            return Mathf.RoundToInt(UnityEngine.Random.Range(0, 1));
+            return Mathf.RoundToInt(UnityEngine.Random.Range(0, 2));
         }
 
         /// <summary>

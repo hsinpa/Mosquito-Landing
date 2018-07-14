@@ -2081,8 +2081,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1373155372880808}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 14.06, y: -2.49, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 13.144, y: -2.14, z: 0}
+  m_LocalScale: {x: 0.9637285, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4809559905868862}
   m_RootOrder: 4
@@ -4872,6 +4872,8 @@ MonoBehaviour:
   _bloodSeekAmount: 0
   _maxPerBloodAmount: 5
   _totalBloodSeekAmount: 20
+  soundModel: {fileID: 0}
+  audioSource: {fileID: 0}
 --- !u!114 &114257121519273272
 MonoBehaviour:
   m_ObjectHideFlags: 1
