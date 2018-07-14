@@ -56,7 +56,7 @@ public class GameController : Observer {
 		SpawnPoint spawnPoint = view.GetViewObject<SpawnPoint>();
 		_camera.SetUp(backgroundRenderer);
 		_soundModel.SetUp();
-		_gameModel.SetUp(0f);
+		_gameModel.SetUp(0.6f);
 		_mosquitoHandler.SetUp(_camera, spawnPoint, _soundModel);
 		_background.SetUp();
 	}
