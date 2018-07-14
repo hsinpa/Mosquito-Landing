@@ -14,11 +14,14 @@ public class Eagle : MonoBehaviour {
     public int necknum;
     public Transform neckobj;
     public Transform lookobj;
-   
+    public float AttackDistance;
+
+
+    public Vector3 stpos;
     // Use this for initialization
     void Start () {
         cc2d = GetComponent<CircleCollider2D>();
-        
+        stpos = transform.position;
         for(int i = 0; i<necknum; i++)
         {
             Transform t = Instantiate(neckobj, transform.position, transform.rotation);
@@ -38,10 +41,6 @@ public class Eagle : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 
-
-        
-
-
         if (target)
         {
             for (int i = 1; i < neck.Count; i++)
@@ -58,7 +57,7 @@ public class Eagle : MonoBehaviour {
             }
             transform.right = new Vector2 ((target.position - transform.position).x, (target.position - transform.position).y)*-1;
             t += Time.deltaTime;
-            if (t > 3)
+            if (t > 3&&Vector2.Distance(transform.position,stpos)<AttackDistance)
             {
                 transform.position = Vector2.Lerp(transform.position, new Vector2(target.position.x,target.position.y), attackspeed);
             }
@@ -73,15 +72,17 @@ public class Eagle : MonoBehaviour {
         else
         {
             transform.right = new Vector2((lookobj.position - transform.position).x, (lookobj.position - transform.position).y) * -1;
-            for (int i = 0; i < neck.Count; i++)
-            {
-                if (i + 1 < neck.Count)
+            if (Vector2.Distance(transform.position, stpos)>=0.01) {
+                for (int i = 0; i < neck.Count; i++)
                 {
-                    neck[i].position = Vector3.Lerp(neck[i].position, neck[i+1].position, sSpeed);
-                    if(i>0)
-                    neck[i].right = -(neck[i + 1].position - neck[i].position);
+                    if (i + 1 < neck.Count)
+                    {
+                        neck[i].position = Vector3.Lerp(neck[i].position, neck[i + 1].position, sSpeed);
+                        if (i > 0)
+                            neck[i].right = -(neck[i + 1].position - neck[i].position);
+                    }
+
                 }
-                
             }
         }
     }

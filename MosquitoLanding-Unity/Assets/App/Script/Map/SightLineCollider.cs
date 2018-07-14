@@ -11,10 +11,7 @@ public class SightLineCollider : MonoBehaviour {
         handMove = GetComponentInParent<HandMove>();
     }
 	
-	// Update is called once per frame
-	void Update () {
-       
-	}
+	
 
     void OnTriggerEnter2D(Collider2D col)
     {

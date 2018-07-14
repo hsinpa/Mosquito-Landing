@@ -50,7 +50,7 @@ public class HandMove : MonoBehaviour {
     void Start () {
         player = GameObject.Find("Mosquito").transform;
         Attack();
-        tt = Time.time;
+        ttt = Time.time;
         starpos = transform.position;
         StartCoroutine(ModeChange(Random.Range(8f,12f)));
         
@@ -64,48 +64,94 @@ public class HandMove : MonoBehaviour {
         switch (_currentState)
         {
             case State.Idle:
+                look();               
+                break;
+
+            case State.Wander:
+                look();
+                wander();
+                break;
+
+            case State.Attack:               
+                Attack();
+                ready();                
+                runtotarget();
+                if (v4.y > 4f)
+                {
+                    if (v4.x>-0.4&&v4.x<0.4)
+                    {
+                        ChangeState(State.Underarm);
+                        
+                    }
+                }
+                break;
+            case State.Underarm:
+                
+
+                break;
+        }
+
+
+        
+
+    }
+
+    
+
+    public void ChangeState(State state)
+    {
+        switch (state)
+        {
+            case State.Idle:
+
                 ani.runtimeAnimatorController = IdleAni;
                 ani.SetBool("Wander", false);
+                _currentState = state;
                 break;
 
             case State.Wander:
                 ani.runtimeAnimatorController = IdleAni;
                 ani.SetBool("Wander", true);
-                wander();
+                _currentState = state;
+
                 break;
 
             case State.Attack:
                 repos();
                 ani.runtimeAnimatorController = AttackAni;
-                Attack();
-                ready();                
-                runtotarget();
-                if (v4.y > 3f)
+                if (Time.time - ttt > 5)
                 {
-                    if (v4.x>-0.4&&v4.x<0.4)
-                    {
-                        _currentState = State.Underarm;
-                        
-                    }
+                    _currentState = State.Attack;
                 }
+                else
+                {
+                    
+                    see = false;
+                }
+                
+
                 break;
 
             case State.Underarm:
-                if (bigtext.activeSelf==false) {
-                    bigtext.SetActive(true);
-                   // Invoke("UnderarmFire", 3);
-                    Time.timeScale = 0;
-                }
-
+                bigtext.SetActive(true);
+                _currentState = state;
+                Time.timeScale = 0;
+                
                 break;
         }
+        
+        
+    }
 
-    
+
+
+    public void look()
+    {
         if (see)
         {
             if (tt > sighttime)
             {
-                toAttack();
+                ChangeState(State.Attack);
             }
             tt += Time.deltaTime;
             EyeSprite.color = new Color(EyeSprite.color.r, EyeSprite.color.g, EyeSprite.color.b, Mathf.Lerp(EyeSprite.color.a, 1, 0.1f));
@@ -116,17 +162,14 @@ public class HandMove : MonoBehaviour {
         }
         else
         {
-            if (_currentState == HandMove.State.Idle)
-            {
-                if (tt > 0)
-                    tt -= Time.deltaTime;
-                EyeSprite.color = Color.Lerp(EyeSprite.color, new Color(1, 1, 1, 0), 0.05f);
-            }
-
+            if (tt > 0)
+                tt -= Time.deltaTime;
+            EyeSprite.color = Color.Lerp(EyeSprite.color, new Color(1, 1, 1, 0), 0.05f);
         }
-
     }
 
+
+    
 
     public void UnderarmFire()
     {
@@ -138,7 +181,9 @@ public class HandMove : MonoBehaviour {
         gunman.SetActive(true);
         see = false;
         tt = 0;
-        _currentState = State.Idle;
+        ttt = Time.time;
+        ChangeState(State.Idle);
+        
     }
 
     IEnumerator ModeChange(float WaitTime)
@@ -147,47 +192,30 @@ public class HandMove : MonoBehaviour {
         switch (_currentState)
         {
             case State.Idle:
-                _currentState = State.Wander;
+                ChangeState(State.Wander);
                 StartCoroutine(ModeChange(Random.Range(8f, 11f)));
                 break;
 
             case State.Wander:
-                _currentState = State.Idle;
+                ChangeState(State.Idle);
                 StartCoroutine(ModeChange(Random.Range(3f, 15f)));
                 break;
         }
         
     }
 
-    public void toAttack()
-    {
-        if (Time.time - ttt>5)
-        {
-            _currentState = State.Attack;
-        }
-        else
-        {
-            see = false;
-        }
-       
-    }
+  
 
     private void wander()
-    {
-        Vector2 RV2 = starpos + new Vector3(17, 0);
-        Vector2 LV2 = starpos + new Vector3(-17, 0);
-        float Rd = starpos.x + 17;
-        float Ld = starpos.x - 17;
-        if (transform.position.x > Rd)
+    {              
+        if (transform.position.x > starpos.x + 17)
         {
             ani.transform.localScale = new Vector3(-1, 1, 1);
         }
-        else if (transform.position.x < Ld)
+        else if (transform.position.x < starpos.x - 17)
         {
             ani.transform.localScale = new Vector3(1, 1, 1);
         }
-
-
     }
 
     public void repos()
@@ -198,9 +226,10 @@ public class HandMove : MonoBehaviour {
 
     public void rest()
     {
-        _currentState = State.Idle;
+        ChangeState(State.Idle);
         see = false;
         tt = 0;
+        ttt = Time.time;
         StopCoroutine(ModeChange(0));
         StopAllCoroutines();
         StartCoroutine(ModeChange(Random.Range(12f, 15f)));
@@ -210,7 +239,6 @@ public class HandMove : MonoBehaviour {
     public void check()
     {
         v4 = player.position - transform.position;
-
     }
 
 
@@ -237,8 +265,7 @@ public class HandMove : MonoBehaviour {
         }
         else
         {
-            ani.SetFloat("runspeed", 0f);
-          
+            ani.SetFloat("runspeed", 0f);          
         }
     }
 
@@ -256,9 +283,7 @@ public class HandMove : MonoBehaviour {
             t += Time.deltaTime;
             if (t >1.5f)
             {
-                player_pos = player.position;
-                
-                //player.GetComponent<MosquitoHandler>().DeadAnimationHandler(EventFlag.Death.Squash);
+                player_pos = player.position;                                
                 fire = true;
                 Invoke("over", 0.3f);
                 t = 0;
@@ -268,8 +293,8 @@ public class HandMove : MonoBehaviour {
         {
             t = 0;
         }
-    } 
-
+    }
+    float k = -5;
     public void ready()
     {
         if (mode == 1)
@@ -293,15 +318,29 @@ public class HandMove : MonoBehaviour {
             }
             else
             {
-                righthand.position = Vector2.Lerp(righthand.position, new Vector2(player.position.x - 0.5f, player.position.y), 0.01f);
-                lefthand.position = Vector2.Lerp(lefthand.position, new Vector2(player.position.x + 0.5f, player.position.y) , 0.01f);
+               
+                if (Vector2.Distance(rc.transform.position, righthand.position) < 0.3)
+                {
+                    righthand.position = Vector2.Lerp(righthand.position, new Vector2(player.position.x - 0.5f, player.position.y), 0.01f);
+                    lefthand.position = Vector2.Lerp(lefthand.position, new Vector2(player.position.x + 0.5f, player.position.y), 0.01f);
+                }
+                else
+                {
+                    k += Time.deltaTime*5;
+                    if (k>5)
+                    {
+                        k = -5;
+                    }
+                    righthand.position = Vector2.Lerp(righthand.position, new Vector2(player.position.x +k - 0.5f, player.position.y+k), 0.01f);
+                    lefthand.position = Vector2.Lerp(lefthand.position, new Vector2(player.position.x + k + 0.5f, player.position.y+k), 0.01f);
+                }
                 rc.enabled = false;
                 lc.enabled = false;
             }
         }
        
     }
-
+    
     public Rigidbody2D bullet;
     public Transform gun;
     public float bulletSpeed;
