@@ -72,8 +72,7 @@ public class MosquitoMovement {
         float rotation = -(inputManager.IsLeftClick() - inputManager.IsRightClick()) * _mosquitoHandler.rotateSpeed * Time.deltaTime * 10;
 
 		//HOW TO LEAVE SUCKBLOOD STATUS
-		if (_mosquitoHandler.currentStatus == MosquitoHandler.Status.SuckBlood ||
-			_mosquitoHandler.currentStatus == MosquitoHandler.Status.Landing) {
+		if (_mosquitoHandler.currentStatus == MosquitoHandler.Status.SuckBlood) {
 
 			if ((headAngle <= 60 || headAngle >= 300) && rotation > 0) rotation = 0;
 

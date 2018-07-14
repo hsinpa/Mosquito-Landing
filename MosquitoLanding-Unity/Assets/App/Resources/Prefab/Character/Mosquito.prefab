@@ -1246,6 +1246,8 @@ MonoBehaviour:
   _bloodSeekAmount: 0
   _maxPerBloodAmount: 5
   _totalBloodSeekAmount: 20
+  soundModel: {fileID: 0}
+  audioSource: {fileID: 0}
 --- !u!114 &114422347105246324
 MonoBehaviour:
   m_ObjectHideFlags: 1
